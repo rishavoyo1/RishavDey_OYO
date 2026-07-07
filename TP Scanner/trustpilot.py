@@ -13,11 +13,11 @@ _expiry = 0
 # ---------------------------------
 import streamlit as st
 
-import os
+import streamlit as st
 
-CLIENT_ID = os.environ["CLIENT_ID"]
-CLIENT_SECRET = os.environ["CLIENT_SECRET"]
-BUSINESS_UNIT_ID = os.environ["BUSINESS_UNIT_ID"]
+CLIENT_ID = st.secrets["CLIENT_ID"]
+CLIENT_SECRET = st.secrets["CLIENT_SECRET"]
+BUSINESS_UNIT_ID = st.secrets["BUSINESS_UNIT_ID"]
 
 def token():
  
