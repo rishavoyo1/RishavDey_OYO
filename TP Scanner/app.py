@@ -130,12 +130,14 @@ if st.button("Submit Review"):
 
     if booking and name and email:
 
+        # Generate Trustpilot Invitation Link
         link = generate_invitation_link(
             booking,
             name,
             email
         )
 
+        # Save submission
         append_submission(
             booking,
             name,
@@ -143,24 +145,22 @@ if st.button("Submit Review"):
             link
         )
 
-        st.markdown("""
-        <div class="success-box">
-        <h3 style="margin-bottom:8px;">✅ Redirecting to Trustpilot...</h3>
+        # Display redirect message
+        st.success("Redirecting you to Trustpilot...")
 
-        Thank you for taking a moment to share your experience.<br>
-        Your feedback helps us improve our services.
-        </div>
-        """, unsafe_allow_html=True)
+        # Fallback button (optional)
+        st.link_button("Click here if you are not redirected", link)
 
-        st.link_button("Open Trustpilot manually", link)
-
-        # Automatic redirect after 2 seconds
+        # Auto Redirect
         components.html(
             f"""
             <script>
-                setTimeout(function(){{
-                    window.location.href = "{link}";
-                }}, 2000);
+                console.log("Generated Trustpilot Link:", "{link}");
+
+                // Redirect after 1 second
+                setTimeout(function() {{
+                    window.top.location.href = "{link}";
+                }}, 1000);
             </script>
             """,
             height=0,
