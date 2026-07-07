@@ -1,6 +1,7 @@
 import streamlit as st
 from trustpilot import generate_invitation_link
 from sheets import append_submission
+import streamlit.components.v1 as components
 
 st.set_page_config(
     page_title="Leave a Review",
@@ -41,15 +42,19 @@ if submitted:
 
             st.success("Redirecting to Trustpilot...")
 
-            st.markdown(
+            components.html(
                 f"""
-                <script>
-                    setTimeout(function() {{
-                        window.location.href = "{link}";
-                    }}, 2000);
-                </script>
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <meta http-equiv="refresh" content="0; URL='{link}'" />
+                </head>
+                <body>
+                    Redirecting...
+                </body>
+                </html>
                 """,
-                unsafe_allow_html=True,
+                height=0,
             )
 
         except Exception as e:
