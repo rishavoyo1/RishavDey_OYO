@@ -136,6 +136,8 @@ if st.button("Submit Review"):
             name,
             email
         )
+        # Debug - Display the generated link
+        st.write(link)
 
         # Save submission
         append_submission(
