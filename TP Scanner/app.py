@@ -145,26 +145,17 @@ if st.button("Submit Review"):
             link
         )
 
-        # Display redirect message
+        # Redirect message
         st.success("Redirecting you to Trustpilot...")
 
-        # Fallback button (optional)
-        st.link_button("Click here if you are not redirected", link)
-
-        # Auto Redirect
-        components.html(
-            f"""
-            <script>
-                console.log("Generated Trustpilot Link:", "{link}");
-
-                // Redirect after 1 second
-                setTimeout(function() {{
-                    window.open("{link}", "_self");
-                }}, 1000);
-            </script>
-            """,
-            height=0,
+        # Auto redirect after 1 second
+        st.markdown(
+            f'<meta http-equiv="refresh" content="1;url={link}">',
+            unsafe_allow_html=True
         )
+
+        # Fallback button
+        st.link_button("Click here if you are not redirected", link)
 
     else:
         st.error("Please fill in all the fields.")
