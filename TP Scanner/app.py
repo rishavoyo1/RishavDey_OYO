@@ -1,59 +1,77 @@
 import streamlit as st
 import streamlit.components.v1 as components
+
 from trustpilot import generate_invitation_link
 from sheets import append_submission
 
 st.set_page_config(
     page_title="Leave a Review",
     page_icon="⭐",
-    layout="centered"
+    layout="centered",
+    initial_sidebar_state="collapsed"
 )
 
-# -----------------------------
+# --------------------------------------------------
 # CSS
-# -----------------------------
+# --------------------------------------------------
+
 st.markdown("""
 <style>
 
-.block-container{
-    max-width:620px;
-    padding-top:2rem;
-    padding-bottom:3rem;
-}
+#MainMenu {visibility:hidden;}
+footer {visibility:hidden;}
+header {visibility:hidden;}
 
-.logo{
-    display:flex;
-    justify-content:center;
-    margin-bottom:20px;
+.block-container{
+    max-width:520px;
+    padding-top:0.8rem;
+    padding-bottom:0.8rem;
 }
 
 h1{
+    margin:0;
+    padding:0;
+    font-size:34px;
+    font-weight:700;
+    color:#173D2C;
     text-align:center;
-    color:#143D2A;
-    font-size:38px;
-    margin-bottom:10px;
 }
 
 .subtitle{
     text-align:center;
-    color:#666666;
-    font-size:17px;
-    margin-bottom:35px;
-    line-height:1.5;
+    color:#6b6b6b;
+    font-size:15px;
+    line-height:1.45;
+    margin-top:8px;
+    margin-bottom:22px;
 }
 
-.stTextInput>div>div>input{
+.logo{
+    text-align:center;
+    margin-bottom:10px;
+}
+
+.logo img{
+    width:180px;
+}
+
+.stTextInput label{
+    font-weight:600;
+}
+
+.stTextInput input{
     border-radius:10px;
+    height:46px;
 }
 
 .stButton>button{
     width:100%;
-    height:52px;
-    border:none;
+    height:48px;
     border-radius:10px;
+    border:none;
     background:#00B67A;
     color:white;
-    font-size:18px;
+    font-size:17px;
     font-weight:600;
 }
 
@@ -62,73 +80,92 @@ h1{
     color:white;
 }
 
-.success-box{
-    margin-top:25px;
-    padding:18px;
-    border-radius:10px;
+.success{
     background:#F2FFF8;
     border:1px solid #00B67A;
+    padding:18px;
+    border-radius:12px;
     text-align:center;
-    color:#145A32;
+    margin-top:15px;
 }
 
-.footer{
-    margin-top:50px;
+.success h3{
+    margin-bottom:8px;
+    color:#0C5C38;
+}
+
+.manual{
+    margin-top:15px;
+}
+
+.small{
     text-align:center;
-    color:#888888;
-    font-size:14px;
+    color:#888;
+    font-size:13px;
+    margin-top:18px;
 }
 
 </style>
 """, unsafe_allow_html=True)
 
-# -----------------------------
-# Logo
-# -----------------------------
+# --------------------------------------------------
+# LOGO
+# --------------------------------------------------
+
 st.markdown("""
 <div class="logo">
-<img src="https://www.dancenter.dk/pubweb/graphics/static/bgid=55/bsk=LD3FRZC4/fdmd5=9d372f6dea4ea3d7f8cb227d470b619e/design5-salesrel-logo.svg" width="260">
+<img src="https://www.dancenter.dk/pubweb/graphics/static/bgid=55/bsk=LD3FRZC4/fdmd5=9d372f6dea4ea3d7f8cb227d470b619e/design5-salesrel-logo.svg">
 </div>
 """, unsafe_allow_html=True)
 
-# -----------------------------
-# Heading
-# -----------------------------
+# --------------------------------------------------
+# TITLE
+# --------------------------------------------------
+
 st.markdown(
     "<h1>Leave a Review on Trustpilot ⭐</h1>",
-    unsafe_allow_html=True
+    unsafe_allow_html=True,
 )
 
 st.markdown("""
 <div class="subtitle">
-Your feedback helps us improve our services and provide an even better stay experience for you.
+Your feedback helps us improve our services and provide an even better stay experience.
 </div>
 """, unsafe_allow_html=True)
 
-# -----------------------------
-# Inputs
-# -----------------------------
-booking = st.text_input(
-    "Booking ID",
-    placeholder="Enter your booking ID"
-)
+# --------------------------------------------------
+# FORM
+# --------------------------------------------------
 
-name = st.text_input(
-    "Guest Name",
-    placeholder="Enter your full name"
-)
+with st.form("review_form"):
 
-email = st.text_input(
-    "Email Address",
-    placeholder="Enter your email"
-)
+    booking = st.text_input(
+        "Booking ID",
+        placeholder="Enter your booking ID"
+    )
 
-# -----------------------------
-# Button
-# -----------------------------
-if st.button("Submit Review"):
+    name = st.text_input(
+        "Guest Name",
+        placeholder="Enter your full name"
+    )
 
-    if booking and name and email:
+    email = st.text_input(
+        "Email Address",
+        placeholder="Enter your email"
+    )
+
+    submit = st.form_submit_button("Submit Review")
+
+# --------------------------------------------------
+# SUBMIT
+# --------------------------------------------------
+
+if submit:
+
+    if not booking or not name or not email:
+        st.error("Please fill in all the fields.")
+
+    else:
 
         link = generate_invitation_link(
             booking,
@@ -144,36 +181,32 @@ if st.button("Submit Review"):
         )
 
         st.markdown("""
-        <div class="success-box">
-        <h3 style="margin-bottom:8px;">✅ Redirecting to Trustpilot...</h3>
+        <div class="success">
+        <h3>✅ Redirecting to Trustpilot...</h3>
 
-        Thank you for taking a moment to share your experience.<br>
-        Your feedback helps us improve our services.
+        Thank you for taking a moment to share your experience.
+        <br>
+        You will be redirected automatically in a few seconds.
         </div>
         """, unsafe_allow_html=True)
 
-        st.link_button("Open Trustpilot manually", link)
+        st.markdown("<div class='manual'>", unsafe_allow_html=True)
+        st.link_button("Open Trustpilot Now", link)
+        st.markdown("</div>", unsafe_allow_html=True)
 
-        # Automatic redirect after 2 seconds
         components.html(
             f"""
             <script>
-                setTimeout(function(){{
-                    window.location.href = "{link}";
-                }}, 2000);
+            setTimeout(function(){{
+                window.location.href="{link}";
+            }},2000);
             </script>
             """,
             height=0,
         )
 
-    else:
-        st.error("Please fill in all the fields.")
-
-# -----------------------------
-# Footer
-# -----------------------------
 st.markdown("""
-<div class="footer">
-Thank you for choosing <b>DanCenter</b> ❤️
+<div class="small">
+Thank you for choosing DanCenter ❤️
 </div>
 """, unsafe_allow_html=True)
