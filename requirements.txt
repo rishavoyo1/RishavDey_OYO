@@ -1,3 +1,6 @@
 streamlit
+pandas
 requests
-oyoms
+gspread
+google-auth
+openpyxl
