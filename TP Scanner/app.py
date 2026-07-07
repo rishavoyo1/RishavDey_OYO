@@ -85,57 +85,72 @@ Your feedback helps us improve our services and provide an even better stay expe
 </div>
 """, unsafe_allow_html=True)
 
-with st.form("review_form"):
+if "submitted" not in st.session_state:
+    st.session_state.submitted = False
 
-    booking = st.text_input(
-        "Booking ID",
-        placeholder="Enter your booking ID"
-    )
+if not st.session_state.submitted:
 
-    name = st.text_input(
-        "Guest Name",
-        placeholder="Enter your full name"
-    )
+    with st.form("review_form"):
 
-    email = st.text_input(
-        "Email Address",
-        placeholder="Enter your email address"
-    )
-
-    submit = st.form_submit_button("Submit Review")
-
-if submit:
-
-    if booking and name and email:
-
-        link = generate_invitation_link(
-            booking,
-            name,
-            email
+        booking = st.text_input(
+            "Booking ID",
+            placeholder="Enter your booking ID"
         )
 
-        append_submission(
-            booking,
-            name,
-            email,
-            link
+        name = st.text_input(
+            "Guest Name",
+            placeholder="Enter your full name"
         )
 
-        st.markdown(
-            """
-            <div class="redirect">
+        email = st.text_input(
+            "Email Address",
+            placeholder="Enter your email address"
+        )
+
+        submit = st.form_submit_button("Submit Review")
+
+    if submit:
+
+        if booking and name and email:
+
+            link = generate_invitation_link(
+                booking,
+                name,
+                email
+            )
+
+            append_submission(
+                booking,
+                name,
+                email,
+                link
+            )
+
+            st.session_state.submitted = True
+            st.session_state.link = link
+            st.rerun()
+
+        else:
+            st.error("Please fill in all fields.")
+
+else:
+
+    st.markdown(
+        """
+        <div class="redirect">
             Redirecting to Trustpilot...
-            </div>
-            """,
-            unsafe_allow_html=True,
-        )
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
 
-        st.markdown(
-            f"""
-            <meta http-equiv="refresh" content="1;url={link}">
-            """,
-            unsafe_allow_html=True,
-        )
-
-    else:
-        st.error("Please fill in all fields.")
+    components.html(
+        f"""
+        <script>
+            setTimeout(function(){{
+                window.top.location.href="{st.session_state.link}";
+            }},1500);
+        </script>
+        """,
+        height=0,
+    )
