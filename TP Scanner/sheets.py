@@ -15,7 +15,7 @@ creds = Credentials.from_service_account_info(
 
 client = gspread.authorize(creds)
 
-sheet = client.open("TP Scanner").worksheet("Dump")
+sheet = client.open("TP Scanner").worksheet("Tracking")
 
 
 def append_submission(booking, name, email, trustpilot_link):
