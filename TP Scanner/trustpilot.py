@@ -11,11 +11,11 @@ _expiry = 0
 # HARDCODE FOR TESTING
  
 # ---------------------------------
-CLIENT_ID = "sKgWpCXpyWKeg6yfkzDLXR1mGH0Gr2Aa"
- 
-CLIENT_SECRET = "eLy3SaETdjhbJAVS"
- 
-BUSINESS_UNIT_ID = "56651b9a0000ff00058663ad"
+import streamlit as st
+
+CLIENT_ID = st.secrets["CLIENT_ID"]
+CLIENT_SECRET = st.secrets["CLIENT_SECRET"]
+BUSINESS_UNIT_ID = st.secrets["BUSINESS_UNIT_ID"]
 
 def token():
  
