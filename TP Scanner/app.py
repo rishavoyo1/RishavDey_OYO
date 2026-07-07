@@ -126,49 +126,26 @@ email = st.text_input(
 # -----------------------------
 # Button
 # -----------------------------
-if st.button("Submit Review"):
- 
-    if booking and name and email:
- 
-        link = generate_invitation_link(
-            booking,
-            name,
-            email
-        )
- 
-        append_submission(
-            booking,
-            name,
-            email,
-            link
-        )
- 
-        st.markdown("""
-<div class="success-box">
-<h3 style="margin-bottom:8px;">✅ Redirecting to Trustpilot...</h3>
- 
-        Thank you for taking a moment to share your experience.<br>
-        Your feedback helps us improve our services.
-</div>
-        """, unsafe_allow_html=True)
- 
-        st.link_button("Open Trustpilot manually", link)
- 
-        # Automatic redirect after 2 seconds
+import streamlit.components.v1 as components
+
+if submit:
+    link = generate_invitation_link(name, email)
+
+    if link:
+        append_submission(booking, name, email, link)
+
+        st.success("Redirecting to Trustpilot...")
+
         components.html(
             f"""
-<script>
-                setTimeout(function(){{
-                    window.location.href = "{link}";
-                }}, 2);
-</script>
+            <script>
+                window.parent.location.href = "{link}";
+            </script>
             """,
             height=0,
         )
- 
-    else:
-        st.error("Please fill in all the fields.")
- 
+
+        st.stop() 
 # -----------------------------
 # Footer
 # -----------------------------
