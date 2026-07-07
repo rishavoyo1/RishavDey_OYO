@@ -9,10 +9,13 @@ name=st.text_input("Full Name")
 email=st.text_input("Email")
 if st.button("Continue"):
     if booking and name and email:
-        link=generate_invitation_link(booking,name,email)
-        append_submission(booking,name,email,link)
-        st.success("Redirecting...")
-        st.markdown(f'<meta http-equiv="refresh" content="1;url={link}">',unsafe_allow_html=True)
-        st.link_button("Open Trustpilot",link)
+        link = generate_invitation_link(booking, name, email)
+
+        append_submission(booking, name, email, link)
+
+        st.success("Your review link is ready!")
+
+        st.link_button("⭐ Leave a Review on Trustpilot", link)
+
     else:
         st.error("Fill all fields")
