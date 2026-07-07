@@ -1,5 +1,4 @@
 import streamlit as st
-import streamlit.components.v1 as components
 from trustpilot import generate_invitation_link
 from sheets import append_submission
 
@@ -91,7 +90,7 @@ st.markdown(
 
 st.markdown("""
 <div class="subtitle">
-Your feedback helps us improve our services and provide an even better stay experience for you.
+Fill in your details to continue.
 </div>
 """, unsafe_allow_html=True)
 
@@ -110,7 +109,7 @@ name = st.text_input(
 
 email = st.text_input(
     "Email Address",
-    placeholder="Enter your email"
+    placeholder="Enter your email address"
 )
 
 # -----------------------------
@@ -127,7 +126,7 @@ submit = st.button(
 if submit:
 
     if not booking or not name or not email:
-        st.error("Please fill all the fields.")
+        st.error("Please fill in all the required fields.")
         st.stop()
 
     with st.spinner("Generating your review invitation..."):
@@ -145,20 +144,14 @@ if submit:
             trustpilot_link
         )
 
-        st.success("Redirecting to Trustpilot...")
-        
-        components.html(
-            f"""
-            <a id="redirect" href="{trustpilot_link}" target="_self"></a>
-        
-            <script>
-                document.getElementById("redirect").click();
-            </script>
-            """,
-            height=0,
-        )
-        
-        st.stop()
+    st.success("✅ Details submitted successfully.")
+
+    st.link_button(
+        "⭐ Continue to Trustpilot",
+        trustpilot_link,
+        use_container_width=True
+    )
+
 # -----------------------------
 # Footer
 # -----------------------------
