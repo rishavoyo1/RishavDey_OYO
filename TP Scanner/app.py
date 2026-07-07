@@ -2,38 +2,38 @@ import streamlit as st
 import streamlit.components.v1 as components
 from trustpilot import generate_invitation_link
 from sheets import append_submission
- 
+
 st.set_page_config(
     page_title="Leave a Review",
     page_icon="⭐",
     layout="centered"
 )
- 
+
 # -----------------------------
 # CSS
 # -----------------------------
 st.markdown("""
 <style>
- 
+
 .block-container{
     max-width:620px;
     padding-top:2rem;
     padding-bottom:3rem;
 }
- 
+
 .logo{
     display:flex;
     justify-content:center;
     margin-bottom:20px;
 }
- 
+
 h1{
     text-align:center;
     color:#143D2A;
     font-size:38px;
     margin-bottom:10px;
 }
- 
+
 .subtitle{
     text-align:center;
     color:#666666;
@@ -41,11 +41,11 @@ h1{
     margin-bottom:35px;
     line-height:1.5;
 }
- 
+
 .stTextInput>div>div>input{
     border-radius:10px;
 }
- 
+
 .stButton>button{
     width:100%;
     height:52px;
@@ -56,41 +56,31 @@ h1{
     font-size:18px;
     font-weight:600;
 }
- 
+
 .stButton>button:hover{
     background:#009966;
     color:white;
 }
- 
-.success-box{
-    margin-top:25px;
-    padding:18px;
-    border-radius:10px;
-    background:#F2FFF8;
-    border:1px solid #00B67A;
-    text-align:center;
-    color:#145A32;
-}
- 
+
 .footer{
     margin-top:50px;
     text-align:center;
     color:#888888;
     font-size:14px;
 }
- 
+
 </style>
 """, unsafe_allow_html=True)
- 
+
 # -----------------------------
 # Logo
 # -----------------------------
 st.markdown("""
 <div class="logo">
-<img src="https://www.dancenter.dk/pubweb/graphics/static/bgid=55/bsk=LD3FRZC4/fdmd5=9d372f6dea4ea3d7f8cb227d470b619e/design5-salesrel-logo.svg%22 width="260">
+<img src="https://www.dancenter.dk/pubweb/graphics/static/bgid=55/bsk=LD3FRZC4/fdmd5=9d372f6dea4ea3d7f8cb227d470b619e/design5-salesrel-logo.svg" width="260">
 </div>
 """, unsafe_allow_html=True)
- 
+
 # -----------------------------
 # Heading
 # -----------------------------
@@ -98,13 +88,13 @@ st.markdown(
     "<h1>Leave a Review on Trustpilot ⭐</h1>",
     unsafe_allow_html=True
 )
- 
+
 st.markdown("""
 <div class="subtitle">
 Your feedback helps us improve our services and provide an even better stay experience for you.
 </div>
 """, unsafe_allow_html=True)
- 
+
 # -----------------------------
 # Inputs
 # -----------------------------
@@ -112,50 +102,61 @@ booking = st.text_input(
     "Booking ID",
     placeholder="Enter your booking ID"
 )
- 
+
 name = st.text_input(
     "Guest Name",
     placeholder="Enter your full name"
 )
- 
+
 email = st.text_input(
     "Email Address",
     placeholder="Enter your email"
 )
- 
+
 # -----------------------------
-# Button
+# Submit Button
+# -----------------------------
+submit = st.button(
+    "Submit",
+    use_container_width=True
+)
+
+# -----------------------------
+# Submit Logic
 # -----------------------------
 if submit:
 
-    # Generate Trustpilot link
-    trustpilot_link = generate_invitation_link(name, email)
-
-    if trustpilot_link:
-
-        # Save to Google Sheet
-        append_submission(
-            booking_number,
-            guest_name,
-            email,
-            trustpilot_link
-        )
-
-        st.success("✅ Redirecting to Trustpilot...")
-
-        components.html(
-            f"""
-            <script>
-                window.parent.location.href = "{trustpilot_link}";
-            </script>
-            """,
-            height=0,
-        )
-
+    if not booking or not name or not email:
+        st.error("Please fill all the fields.")
         st.stop()
 
-    else:
-        st.error("Unable to generate Trustpilot link.")
+    with st.spinner("Generating your review invitation..."):
+
+        trustpilot_link = generate_invitation_link(name, email)
+
+        if trustpilot_link:
+
+            append_submission(
+                booking,
+                name,
+                email,
+                trustpilot_link
+            )
+
+            st.success("✅ Redirecting to Trustpilot...")
+
+            components.html(
+                f"""
+                <script>
+                    window.top.location.href = "{trustpilot_link}";
+                </script>
+                """,
+                height=0,
+            )
+
+        else:
+            st.error("Unable to generate Trustpilot invitation.")
+
 # -----------------------------
 # Footer
 # -----------------------------
