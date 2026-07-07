@@ -1,5 +1,4 @@
 import streamlit as st
-import streamlit.components.v1 as components
 
 from trustpilot import generate_invitation_link
 from sheets import append_submission
@@ -85,72 +84,57 @@ Your feedback helps us improve our services and provide an even better stay expe
 </div>
 """, unsafe_allow_html=True)
 
-if "submitted" not in st.session_state:
-    st.session_state.submitted = False
+with st.form("review_form"):
 
-if not st.session_state.submitted:
-
-    with st.form("review_form"):
-
-        booking = st.text_input(
-            "Booking ID",
-            placeholder="Enter your booking ID"
-        )
-
-        name = st.text_input(
-            "Guest Name",
-            placeholder="Enter your full name"
-        )
-
-        email = st.text_input(
-            "Email Address",
-            placeholder="Enter your email address"
-        )
-
-        submit = st.form_submit_button("Submit Review")
-
-    if submit:
-
-        if booking and name and email:
-
-            link = generate_invitation_link(
-                booking,
-                name,
-                email
-            )
-
-            append_submission(
-                booking,
-                name,
-                email,
-                link
-            )
-
-            st.session_state.submitted = True
-            st.session_state.link = link
-            st.rerun()
-
-        else:
-            st.error("Please fill in all fields.")
-
-else:
-
-    st.markdown(
-        """
-        <div class="redirect">
-            Redirecting to Trustpilot...
-        </div>
-        """,
-        unsafe_allow_html=True,
+    booking = st.text_input(
+        "Booking ID",
+        placeholder="Enter your booking ID"
     )
 
-    components.html(
-        f"""
-        <script>
-            setTimeout(function(){{
-                window.top.location.href="{st.session_state.link}";
-            }},1500);
-        </script>
-        """,
-        height=0,
+    name = st.text_input(
+        "Guest Name",
+        placeholder="Enter your full name"
     )
+
+    email = st.text_input(
+        "Email Address",
+        placeholder="Enter your email address"
+    )
+
+    submit = st.form_submit_button("Submit Review")
+
+if submit:
+
+    if booking and name and email:
+
+        link = generate_invitation_link(
+            booking,
+            name,
+            email
+        )
+
+        append_submission(
+            booking,
+            name,
+            email,
+            link
+        )
+
+        st.markdown(
+            """
+            <div class="redirect">
+                Redirecting to Trustpilot...
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+
+        st.markdown(
+            f"""
+            <meta http-equiv="refresh" content="2;url={link}">
+            """,
+            unsafe_allow_html=True,
+        )
+
+    else:
+        st.error("Please fill in all fields.")
