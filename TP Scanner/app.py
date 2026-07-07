@@ -1,63 +1,18 @@
 import streamlit as st
 from trustpilot import generate_invitation_link
 from sheets import append_submission
-import streamlit.components.v1 as components
-
-st.set_page_config(
-    page_title="Leave a Review",
-    page_icon="⭐",
-    layout="centered"
-)
-
-st.markdown("""
-<style>
-.block-container {
-    max-width: 650px;
-    padding-top: 2rem;
-}
-.stButton > button {
-    background: #00B67A;
-    color: white;
-}
-</style>
-""", unsafe_allow_html=True)
-
+st.set_page_config(page_title="Leave a Review",page_icon="⭐",layout="centered")
+st.markdown("<style>.block-container{max-width:650px;padding-top:2rem}.stButton>button{background:#00B67A;color:white}</style>",unsafe_allow_html=True)
 st.title("⭐ Leave a Review")
-
-with st.form("review_form"):
-    booking = st.text_input("Booking ID")
-    name = st.text_input("Full Name")
-    email = st.text_input("Email")
-
-    submitted = st.form_submit_button("Submit")
-
-if submitted:
+booking=st.text_input("Booking ID")
+name=st.text_input("Full Name")
+email=st.text_input("Email")
+if st.button("Continue"):
     if booking and name and email:
-        try:
-            # Generate Trustpilot link
-            link = generate_invitation_link(booking, name, email)
-
-            # Save submission
-            append_submission(booking, name, email, link)
-
-            st.success("Redirecting to Trustpilot...")
-
-            components.html(
-                f"""
-                <!DOCTYPE html>
-                <html>
-                <head>
-                    <meta http-equiv="refresh" content="0; URL='{link}'" />
-                </head>
-                <body>
-                    Redirecting...
-                </body>
-                </html>
-                """,
-                height=0,
-            )
-
-        except Exception as e:
-            st.error(f"Error: {e}")
+        link=generate_invitation_link(booking,name,email)
+        append_submission(booking,name,email,link)
+        st.success("Redirecting...")
+        st.markdown(f'<meta http-equiv="refresh" content="1;url={link}">',unsafe_allow_html=True)
+        st.link_button("Open Trustpilot",link)
     else:
-        st.error("Please fill all fields.")
+        st.error("Fill all fields")
