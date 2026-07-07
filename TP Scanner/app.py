@@ -132,31 +132,31 @@ if submit:
 
     with st.spinner("Generating your review invitation..."):
 
-        trustpilot_link = generate_invitation_link(name, email)
+        trustpilot_link = generate_invitation_link(
+            booking,
+            name,
+            email
+        )
 
-        if trustpilot_link:
+        append_submission(
+            booking,
+            name,
+            email,
+            trustpilot_link
+        )
 
-            append_submission(
-                booking,
-                name,
-                email,
-                trustpilot_link
-            )
+        st.success("Redirecting to Trustpilot...")
 
-            st.success("✅ Redirecting to Trustpilot...")
+        components.html(
+            f"""
+            <script>
+                window.top.location.href = "{trustpilot_link}";
+            </script>
+            """,
+            height=0,
+        )
 
-            components.html(
-                f"""
-                <script>
-                    window.top.location.href = "{trustpilot_link}";
-                </script>
-                """,
-                height=0,
-            )
-
-        else:
-            st.error("Unable to generate Trustpilot invitation.")
-
+        st.stop()
 # -----------------------------
 # Footer
 # -----------------------------
