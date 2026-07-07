@@ -1,5 +1,4 @@
-import os
-import json
+import streamlit as st
 import gspread
 from google.oauth2.service_account import Credentials
 from datetime import datetime
@@ -9,7 +8,7 @@ SCOPES = [
     "https://www.googleapis.com/auth/drive",
 ]
 creds = Credentials.from_service_account_info(
-    json.loads(os.environ["GCP_SERVICE_ACCOUNT"]),
+    st.secrets["gcp_service_account"],
     scopes=SCOPES,
 )
 
