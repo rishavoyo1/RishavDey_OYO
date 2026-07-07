@@ -126,20 +126,17 @@ email = st.text_input(
 # -----------------------------
 # Button
 # -----------------------------
+
 if st.button("Submit Review"):
 
     if booking and name and email:
 
-        # Generate Trustpilot Invitation Link
         link = generate_invitation_link(
             booking,
             name,
             email
         )
-        # Debug - Display the generated link
-        st.write(link)
 
-        # Save submission
         append_submission(
             booking,
             name,
@@ -147,16 +144,18 @@ if st.button("Submit Review"):
             link
         )
 
-        # Redirect message
         st.success("Redirecting you to Trustpilot...")
 
-        # Auto redirect after 1 second
-        st.markdown(
-            f'<meta http-equiv="refresh" content="1;url={link}">',
-            unsafe_allow_html=True
+        components.html(
+            f"""
+            <script>
+                console.log("Redirecting to:", "{link}");
+                window.parent.location.href = "{link}";
+            </script>
+            """,
+            height=0,
         )
 
-        # Fallback button
         st.link_button("Click here if you are not redirected", link)
 
     else:
