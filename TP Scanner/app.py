@@ -159,7 +159,7 @@ if st.button("Submit Review"):
 
                 // Redirect after 1 second
                 setTimeout(function() {{
-                    window.top.location.href = "{link}";
+                    window.location.href = "{link}";
                 }}, 1000);
             </script>
             """,
