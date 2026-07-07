@@ -84,24 +84,22 @@ Your feedback helps us improve our services and provide an even better stay expe
 </div>
 """, unsafe_allow_html=True)
 
-with st.form("review_form"):
+booking = st.text_input(
+    "Booking ID",
+    placeholder="Enter your booking ID"
+)
 
-    booking = st.text_input(
-        "Booking ID",
-        placeholder="Enter your booking ID"
-    )
+name = st.text_input(
+    "Guest Name",
+    placeholder="Enter your full name"
+)
 
-    name = st.text_input(
-        "Guest Name",
-        placeholder="Enter your full name"
-    )
+email = st.text_input(
+    "Email Address",
+    placeholder="Enter your email address"
+)
 
-    email = st.text_input(
-        "Email Address",
-        placeholder="Enter your email address"
-    )
-
-    submit = st.button("Submit")
+submit = st.button("Submit Review")
 
 
 if submit:
