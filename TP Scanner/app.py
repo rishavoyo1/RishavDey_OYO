@@ -146,16 +146,22 @@ if submit:
         )
 
         st.success("Redirecting to Trustpilot...")
-
+        
         components.html(
             f"""
-            <script>
-                window.top.location.href = "{trustpilot_link}";
-            </script>
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <meta http-equiv="refresh" content="0; url={trustpilot_link}">
+            </head>
+            <body>
+                Redirecting...
+            </body>
+            </html>
             """,
             height=0,
         )
-
+        
         st.stop()
 # -----------------------------
 # Footer
