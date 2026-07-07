@@ -101,7 +101,7 @@ with st.form("review_form"):
         placeholder="Enter your email address"
     )
 
-    submit = st.form_submit_button("Submit Review")
+    submit = st.button("Submit")
 
 
 if submit:
