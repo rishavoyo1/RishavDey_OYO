@@ -41,11 +41,13 @@ if submitted:
 
             st.success("Redirecting to Trustpilot...")
 
-            # Auto redirect after 2 seconds
             st.markdown(
                 f"""
-                <meta http-equiv="refresh" content="2;url={link}">
-                <p>You are being redirected to Trustpilot...</p>
+                <script>
+                    setTimeout(function() {{
+                        window.location.href = "{link}";
+                    }}, 2000);
+                </script>
                 """,
                 unsafe_allow_html=True,
             )
