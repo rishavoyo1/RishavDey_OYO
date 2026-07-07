@@ -126,26 +126,36 @@ email = st.text_input(
 # -----------------------------
 # Button
 # -----------------------------
-import streamlit.components.v1 as components
-
 if submit:
-    link = generate_invitation_link(name, email)
 
-    if link:
-        append_submission(booking, name, email, link)
+    # Generate Trustpilot link
+    trustpilot_link = generate_invitation_link(name, email)
 
-        st.success("Redirecting to Trustpilot...")
+    if trustpilot_link:
+
+        # Save to Google Sheet
+        append_submission(
+            booking_number,
+            guest_name,
+            email,
+            trustpilot_link
+        )
+
+        st.success("✅ Redirecting to Trustpilot...")
 
         components.html(
             f"""
             <script>
-                window.parent.location.href = "{link}";
+                window.parent.location.href = "{trustpilot_link}";
             </script>
             """,
             height=0,
         )
 
-        st.stop() 
+        st.stop()
+
+    else:
+        st.error("Unable to generate Trustpilot link.")
 # -----------------------------
 # Footer
 # -----------------------------
