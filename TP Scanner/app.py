@@ -149,15 +149,11 @@ if submit:
         
         components.html(
             f"""
-            <!DOCTYPE html>
-            <html>
-            <head>
-                <meta http-equiv="refresh" content="0; url={trustpilot_link}">
-            </head>
-            <body>
-                Redirecting...
-            </body>
-            </html>
+            <a id="redirect" href="{trustpilot_link}" target="_self"></a>
+        
+            <script>
+                document.getElementById("redirect").click();
+            </script>
             """,
             height=0,
         )
